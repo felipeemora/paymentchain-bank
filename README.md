@@ -6,6 +6,9 @@ Maven mono repository to bank starup - contains 2 layers
     - transaction microservice
 - infrastructure domain
 
+2. [Swagger Interface](http://localhost:8081/swagger-ui)
+2. [Access to h2 database](http://localhost:8081/h2-console/)
+
 # Testing micorservices scheme
 This file contains the imputs shcmes for to test POST method on each microservices(customer, product, and transactions)
 
