@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,9 @@ public class CustomerController {
     @Autowired
     CustomerRepository customerRepository;
 
+    @Autowired
+    Environment env;
+
     private final WebClient.Builder webClientBuilder;
 
     public CustomerController(WebClient.Builder webClientBuilder) {
@@ -58,6 +62,12 @@ public class CustomerController {
                 httpClientConfig.addHandlerLast(new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS));
                 httpClientConfig.addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS));
             });
+
+
+    @GetMapping("/check")
+    public String getCheck() {
+        return "Hello, your property value is " + env.getProperty("custom.activeprofileName");
+    }
 
     @GetMapping()
     public List<CustomerEntity> list() {
