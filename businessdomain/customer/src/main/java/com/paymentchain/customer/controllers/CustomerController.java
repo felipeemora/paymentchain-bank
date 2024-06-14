@@ -1,7 +1,6 @@
 package com.paymentchain.customer.controllers;
 
 import java.time.Duration;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -46,11 +45,8 @@ public class CustomerController {
     @Autowired
     Environment env;
 
-    private final WebClient.Builder webClientBuilder;
-
-    public CustomerController(WebClient.Builder webClientBuilder) {
-        this.webClientBuilder = webClientBuilder;
-    }
+    @Autowired
+    private WebClient.Builder webClientBuilder;
 
     HttpClient client = HttpClient.create()
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
@@ -126,16 +122,16 @@ public class CustomerController {
             product.setProductName(productName);
         });
 
-        customer.setTransactions(getTransactions(customer.getIban()));
+        // customer.setTransactions(getTransactions(customer.getIban()));
         return customer;
     }
 
     private String getProductName(long id) {
         WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
-                .baseUrl("http://localhost:8083/product")
+                .baseUrl("http://BUSSINESSDOMAIN-PRODUCTS/product")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultUriVariables(Collections.singletonMap("url", "\"http://localhost:8083/product"))
                 .build();
+        
         JsonNode block = build.method(HttpMethod.GET).uri("/" + id)
                 .retrieve().bodyToMono(JsonNode.class).block();
 
