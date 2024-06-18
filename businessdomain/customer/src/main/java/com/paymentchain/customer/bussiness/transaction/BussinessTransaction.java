@@ -2,7 +2,6 @@ package com.paymentchain.customer.bussiness.transaction;
 
 import java.net.UnknownHostException;
 import java.time.Duration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +21,7 @@ import com.paymentchain.customer.entities.CustomerProduct;
 import com.paymentchain.customer.exception.BussinessRuleExcaption;
 import com.paymentchain.customer.repositories.CustomerRepository;
 
-import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelOption; 
 import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
@@ -82,7 +81,7 @@ public class BussinessTransaction {
             }
         });
 
-        // customer.setTransactions(getTransactions(customer.getIban()));
+        customer.setTransactions(getTransactions(customer.getIban()));
         return customer;
     }
 
@@ -113,7 +112,7 @@ public class BussinessTransaction {
 
     private List<?> getTransactions(String iban) {
         WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
-                .baseUrl("http://localhost:8082/transaction")
+                .baseUrl("http://BUSSINESSDOMAIN-TRANSACTIONS/transaction")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
         
