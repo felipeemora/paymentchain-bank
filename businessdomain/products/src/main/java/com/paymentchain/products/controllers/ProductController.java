@@ -2,6 +2,7 @@ package com.paymentchain.products.controllers;
 
 import com.paymentchain.products.entities.ProductEntity;
 import com.paymentchain.products.repositories.ProductRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,12 +11,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import com.paymentchain.products.bussiness.BussinessTransaction;
+import com.paymentchain.products.exception.BussinessRuleExcaption;
+
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    BussinessTransaction bussinessTransaction;
 
     @GetMapping()
     public List<ProductEntity> list() {
@@ -47,13 +54,14 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> post(@RequestBody ProductEntity input) {
-        ProductEntity saved = productRepository.save(input);
-        return ResponseEntity.ok(saved);
+    public ResponseEntity<?> post(@RequestBody ProductEntity input) throws BussinessRuleExcaption {
+        ProductEntity saved = bussinessTransaction.createProduct(input);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
+        get(id);
         productRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
