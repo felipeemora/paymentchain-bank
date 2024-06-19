@@ -1,0 +1,67 @@
+## YAML Template.
+---
+services:
+  registry-discovery:
+    container_name: id-eureka
+    image: paymentchain/microservice-docker-eurekaserver:0.0.1-SNAPSHOT
+    ports:
+      - 8761:8761
+    environment:
+      - JAVA_OPTS=
+         -Xms256M 
+         -Xmx256M 
+
+  product-catalog:
+    container_name: bd-product-catalog
+    image: products-image:latest
+    environment:
+       - JAVA_OPTS=
+         -Xms256M 
+         -Xmx256M
+         -DEUREKA_SERVER=http://registry-discovery:8761/eureka/
+    depends_on:
+      - registry-discovery
+    ports:
+      - 8083:8083
+
+  customer:
+    container_name: bd-customer
+    image: customer-image:latest
+    environment:
+      - JAVA_OPTS=
+         -Xms256M 
+         -Xmx256M
+         -DEUREKA_SERVER=http://registry-discovery:8761/eureka/
+
+    depends_on:
+      - registry-discovery
+    ports:
+      - 8081:8080
+
+  postgres_db:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+        - 5432:5432
+    volumes:
+        - ./dbfiles:/docker-entrypoint-initdb.d
+        - ./postgres_data:/var/lib/postgresql/data
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: qwerty
+        POSTGRES_DB: postgres
+
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "qwerty"
+    ports:
+      - 80:80
+    depends_on:
+      - postgres_db
+
+
+
