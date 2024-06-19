@@ -1,0 +1,88 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Customer",
+            "type": "shell",
+			"command": "mvn package -DskipTests && ls -l target",
+            "options": {
+                "cwd": "${workspaceFolder}/businessdomain/customer"
+            },
+            "problemMatcher": ["$maven"]
+        },
+        {
+            "label": "Build Products",
+            "type": "shell",
+            "command": "mvn package -DskipTests && ls -l target",
+            "options": {
+                "cwd": "${workspaceFolder}/businessdomain/products"
+            },
+            "problemMatcher": ["$maven"]
+        },
+        {
+            "label": "Build Transactions",
+            "type": "shell",
+            "command": "mvn package -DskipTests && ls -l target",
+            "options": {
+                "cwd": "${workspaceFolder}/businessdomain/transactions"
+            },
+            "problemMatcher": ["$maven"]
+        },
+		{
+            "label": "Build Eureka",
+            "type": "shell",
+			"command": "mvn package -DskipTests && ls -l target",
+            "options": {
+                "cwd": "${workspaceFolder}/infraestructuradomain/eurekaserver"
+            },
+            "problemMatcher": ["$maven"]
+        },
+        {
+            "label": "Build All",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Build Customer",
+                "Build Products",
+                "Build Transactions"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker Build Customer",
+            "type": "shell",
+            "command": "docker build -t customer-image --no-cache --build-arg JAR_FILE=target/*.jar .",
+            "options": {
+                "cwd": "${workspaceFolder}/businessdomain/customer"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker Build Products",
+            "type": "shell",
+            "command": "docker build -t products-image --no-cache --build-arg JAR_FILE=target/*.jar .",
+            "options": {
+                "cwd": "${workspaceFolder}/businessdomain/products"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker Build Transactions",
+            "type": "shell",
+            "command": "docker build -t transactions-image --no-cache --build-arg JAR_FILE=target/*.jar .",
+            "options": {
+                "cwd": "${workspaceFolder}/businessdomain/transactions"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker Build All",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Docker Build Customer",
+                "Docker Build Products",
+                "Docker Build Transactions"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}
