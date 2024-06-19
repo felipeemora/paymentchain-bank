@@ -3,13 +3,24 @@
 services:
   registry-discovery:
     container_name: id-eureka
-    image: paymentchain/microservice-docker-eurekaserver:0.0.1-SNAPSHOT
+    image: eureka-image:latest
     ports:
       - 8761:8761
     environment:
       - JAVA_OPTS=
          -Xms256M 
          -Xmx256M 
+
+  admin-discovery:
+    container_name: id-spring-admin
+    image: spring-admin-image:latest
+    ports:
+      - 8062:8062
+    environment:
+      - JAVA_OPTS=
+         -Xms256M 
+         -Xmx256M 
+         -DEUREKA_SERVER=http://registry-discovery:8761/eureka/
 
   product-catalog:
     container_name: bd-product-catalog
@@ -24,6 +35,19 @@ services:
     ports:
       - 8083:8083
 
+  transaction-catalog:
+    container_name: bd-transaction-catalog
+    image: transactions-image:latest
+    environment:
+      - JAVA_OPTS=
+        -Xms256M 
+        -Xmx256M
+        -DEUREKA_SERVER=http://registry-discovery:8761/eureka/
+    depends_on:
+      - registry-discovery
+    ports:
+      - 8082:8082
+
   customer:
     container_name: bd-customer
     image: customer-image:latest
@@ -35,8 +59,9 @@ services:
 
     depends_on:
       - registry-discovery
+      - postgres_db
     ports:
-      - 8081:8080
+      - 8081:8081
 
   postgres_db:
     container_name: postgres

@@ -38,12 +38,23 @@
             "problemMatcher": ["$maven"]
         },
         {
+            "label": "Build Spring Admin",
+            "type": "shell",
+			"command": "mvn package -DskipTests && ls -l target",
+            "options": {
+                "cwd": "${workspaceFolder}/infraestructuradomain/springadmin"
+            },
+            "problemMatcher": ["$maven"]
+        }
+        {
             "label": "Build All",
             "dependsOrder": "sequence",
             "dependsOn": [
                 "Build Customer",
                 "Build Products",
-                "Build Transactions"
+                "Build Transactions",
+                "Build Eureka",
+                "Build Spring Admin"
             ],
             "problemMatcher": []
         },
@@ -75,12 +86,32 @@
             "problemMatcher": []
         },
         {
+            "label": "Docker Build Eureka",
+            "type": "shell",
+            "command": "docker build -t eureka-image --no-cache --build-arg JAR_FILE=target/*.jar .",
+            "options": {
+                "cwd": "${workspaceFolder}/infraestructuradomain/eurekaserver"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker Build Spring Admin",
+            "type": "shell",
+            "command": "docker build -t spring-admin-image --no-cache --build-arg JAR_FILE=target/*.jar .",
+            "options": {
+                "cwd": "${workspaceFolder}/infraestructuradomain/springadmin"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Docker Build All",
             "dependsOrder": "sequence",
             "dependsOn": [
                 "Docker Build Customer",
                 "Docker Build Products",
-                "Docker Build Transactions"
+                "Docker Build Transactions",
+                "Docker Build Eureka",
+                "Docker Build Spring Admin"
             ],
             "problemMatcher": []
         }

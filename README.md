@@ -1,24 +1,31 @@
-Maven mono repository to bank starup - contains 2 layers 
-
-- bussiness domain
-    - customer microservice
-    - product microservice
-    - transaction microservice
-- infrastructure domain
+# Maven mono repository to bank startup
 
 2. [Swagger Interface](http://localhost:8081/swagger-ui)
 2. [Access to h2 database](http://localhost:8081/h2-console/)
+2. [Access to pg admin](http://localhost:80)
 
-# Correr MS con perfiles
-```code
-  java -jar path/target/*.jar --spring.profiles.active=dev
-```
-# Testing micorservices scheme
-This file contains the imputs shcmes for to test POST method on each microservices(customer, product, and transactions)
+### 1. Compilar todos los microservicios y generar imágenes de docker
+Se puede entrar a cada proyecto y correr ```mvn package``` para vs code está el archivo ```tasks.json``` y con el comando ```ctrl + shift + p``` -> buscar la opción ```Run Task``` y correr las tareas en el siguien orden
 
-## 1- Products scheme
+- *Build All* (Entra a cada folder y compila los proyectos para generar el .jar)
+- *Docker Build All* (Entra a cada folder y genera la imagen de docker)
 
-### scheme product 1
+### 2. Generar el contenedor de docker con todos los servicios
+En el folder principal está el archivo ```docker-compose.yml``` que se encarga de orquestar los siguientes servicios
+
+- App de ```customers```
+- App de ```productos```
+- App de ```transactions```
+- App de ```registry-discovery``` eureka para comunicar los microservicios
+- App de ```spring-admin``` para administar las aplicaciones
+- Base de datos ```postgres```
+- Administrator de base de datos ```pgadmin```
+
+## Pruebas
+
+### Creación de productos ```POST /products```
+
+#### Cuenta horros
  ```json
  {
     "id": 1,
@@ -26,7 +33,7 @@ This file contains the imputs shcmes for to test POST method on each microservic
     "name": "Cuenta horros"
   }
 ```
-## scheme product 1
+#### Tarjeta credito
  ```json
   {
     "id": 2,
@@ -34,7 +41,7 @@ This file contains the imputs shcmes for to test POST method on each microservic
     "name": "tarjeta credito"
   }
 ```
-## scheme product 1
+#### Puntos banco
  ```json
   {
     "id": 3,
@@ -42,8 +49,54 @@ This file contains the imputs shcmes for to test POST method on each microservic
     "name": "Puntos banco"
   }
 ```
-## 2- Customer schemes
-### scheme customer 1
+
+### Creación de transacciones ```POST /transactions```
+
+##### Transacción 1
+```json
+{
+  "id": 0,
+  "reference": "6524ld",
+  "accountIban": "000251487",
+  "date": "2022-08-15T11:36:07.683Z",
+  "amount": 450,
+  "fee": 2,
+  "description": "Consignación",
+  "status": "LIQUIDADA",
+  "channel": "OFICINA"
+}
+```
+#### Transacción 2
+```json
+{
+  "id": 0,
+  "reference": "hg52487",
+  "accountIban": "000251487",
+  "date": "2022-11-10T15:20:00.437Z",
+  "amount": 100,
+  "fee": 3,
+  "description": "Retiro",
+  "status": "RECHAZADA",
+  "channel": "WEB"
+}
+```
+#### Transacción 3
+```json
+{
+  "id": 0,
+  "reference": "53254jks",
+  "accountIban": "000257849",
+  "date": "2022-11-10T15:20:00.437Z",
+  "amount": 100,
+  "fee": 3,
+  "description": "Retiro",
+  "status": "LIQUIDADA",
+  "channel": "WEB"
+}
+```
+
+## Creación de clientes  ```POST /customer/V1```
+#### Cliente 1
 ```json
 {
   "id": 0,
@@ -70,48 +123,7 @@ This file contains the imputs shcmes for to test POST method on each microservic
   ]
 }
 ```
-## 3- Transaction Schema
 
-### scheme Transaction 1
-```json
-{
-  "id": 0,
-  "reference": "6524ld",
-  "accountIban": "000251487",
-  "date": "2022-08-15T11:36:07.683Z",
-  "amount": 450,
-  "fee": 2,
-  "description": "Consignación",
-  "status": "LIQUIDADA",
-  "channel": "OFICINA"
-}
-```
-### scheme Transaction 2
-```json
-{
-  "id": 0,
-  "reference": "hg52487",
-  "accountIban": "000251487",
-  "date": "2022-11-10T15:20:00.437Z",
-  "amount": 100,
-  "fee": 3,
-  "description": "Retiro",
-  "status": "RECHAZADA",
-  "channel": "WEB"
-}
-```
-### scheme Transaction 3
-```json
-{
-  "id": 0,
-  "reference": "53254jks",
-  "accountIban": "000257849",
-  "date": "2022-11-10T15:20:00.437Z",
-  "amount": 100,
-  "fee": 3,
-  "description": "Retiro",
-  "status": "LIQUIDADA",
-  "channel": "WEB"
-}
-```
+Si todo sale bien, al consultar el servicio ```GET customer/V1/full``` con el código de cliente 01, deberá traer toda la info de ```cliente + productos + transacciones```
+
 
