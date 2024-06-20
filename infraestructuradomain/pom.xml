@@ -16,6 +16,7 @@
         <module>configserver</module>
         <module>eurekaserver</module>
         <module>springadmin</module>
+        <module>apigategay</module>
     </modules>
 
     <properties>
