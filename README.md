@@ -42,7 +42,13 @@ En el folder principal está el archivo ```docker-compose.yml``` que se encarga 
 4. En clientes crear uno nuevo con el nombre ``front-angular-billing-app`` va a ser el cliente que querrá hacer uso de nuestros microservicios
 ![Key Cloack Step 5](imgs/keycloack-step5.png)
 
-5. Ya con eso puede generar el Access Token el cliente
+5. En el apartado Realm Settings - en la seccion de Access Token se puede modificar el tiempo de vida para que no se venza tan rápido
+![Key Cloack Step 5](imgs/keycloack-step7.png)
+
+6. En el apartado Realm Settings - en la seccion de Keys se puede obtener la rsa-generated que debe ir en las variables de entorno en el docker-compose
+![Key Cloack Step 5](imgs/keycloack-step8.png)
+
+7. Ya con eso puede generar el Access Token el cliente
 ![Key Cloack Step 6](imgs/keycloack-step6.png)
 
 

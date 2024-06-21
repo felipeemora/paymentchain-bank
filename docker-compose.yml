@@ -124,15 +124,46 @@ services:
     depends_on:
       - postgres_db
 
-  keycloak_server:
+  keycloack-server:
     container_name: keycloak-server
     image: quay.io/keycloak/keycloak:25.0.1
     restart: always
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      DB_VENDOR: H2
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres-keycloak-db
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
     ports:
       - 8091:8080
     command: start-dev
+    depends_on:
+      - postgres-keycloak-db
 
+  postgres-keycloak-db:
+    container_name: postgres-keycloak-db
+    image: postgres:latest
+    environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: keycloak
+        POSTGRES_PASSWORD: keycloak
+    volumes:
+        - ./keycloak_postgres_data:/var/lib/postgresql/data
+
+  keycloack:
+    container_name: keycloackAdapter
+    image: keycloack-adapter-image:latest
+    environment:
+      - JAVA_OPTS=
+        -Xms256M 
+        -Xmx256M
+        -DEUREKA_SERVER=http://registry-discovery:8761/eureka/
+        -DKEYCLOACK_SERVER=http://localhost:8091/realms/
+        -DKEYCLOACK_REAL_ID=qofd-mzB-IDcEHpS5tOVA0N9q3HpRf3K5i7Pj7a93YY
+    depends_on:
+      - registry-discovery
+      - keycloack-server
+    ports:
+      - 8088:8088

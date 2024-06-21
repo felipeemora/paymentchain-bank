@@ -65,6 +65,15 @@
             "problemMatcher": ["$maven"]
         },
         {
+            "label": "Build Keycloack",
+            "type": "shell",
+			"command": "mvn package -DskipTests && ls -l target",
+            "options": {
+                "cwd": "${workspaceFolder}/infraestructuradomain/keycloack-adapter"
+            },
+            "problemMatcher": ["$maven"]
+        },
+        {
             "label": "Microservices - Build All",
             "dependsOrder": "sequence",
             "dependsOn": [
@@ -74,7 +83,8 @@
                 "Build Eureka",
                 "Build Spring Admin",
                 "Build Config Server",
-                "Build API Gateway"
+                "Build API Gateway",
+                "Build Keycloack"
             ],
             "problemMatcher": []
         },
@@ -142,6 +152,15 @@
             "problemMatcher": []
         },
         {
+            "label": "Docker Build Keycloack",
+            "type": "shell",
+            "command": "docker build -t keycloack-adapter-image --no-cache --build-arg JAR_FILE=target/*.jar .",
+            "options": {
+                "cwd": "${workspaceFolder}/infraestructuradomain/keycloack-adapter"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Docker - Build All",
             "dependsOrder": "sequence",
             "dependsOn": [
@@ -151,7 +170,8 @@
                 "Docker Build Eureka",
                 "Docker Build Spring Admin",
                 "Docker Build Config Server",
-                "Docker Build API Gateway"
+                "Docker Build API Gateway",
+                "Docker Build Keycloack"
             ],
             "problemMatcher": []
         }
