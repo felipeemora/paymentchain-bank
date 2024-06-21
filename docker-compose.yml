@@ -21,6 +21,8 @@ services:
          -Xms256M 
          -Xmx256M 
          -DEUREKA_SERVER=http://registry-discovery:8761/eureka/
+    depends_on:
+      - registry-discovery
 
   product-catalog:
     container_name: bd-product-catalog
@@ -39,6 +41,32 @@ services:
     container_name: bd-transaction-catalog
     image: transactions-image:latest
     environment:
+       - JAVA_OPTS=
+         -Xms256M 
+         -Xmx256M
+         -DEUREKA_SERVER=http://registry-discovery:8761/eureka/
+    depends_on:
+      - registry-discovery
+    ports:
+      - 8082:8082
+
+  apigateway:
+    container_name: apigateway-app
+    image: api-gateway-image:latest
+    environment:
+       - JAVA_OPTS=
+         -Xms256M 
+         -Xmx256M
+         -DEUREKA_SERVER=http://registry-discovery:8761/eureka/
+    depends_on:
+      - registry-discovery
+    ports:
+      - 8080:8080
+
+  customer-config-server:
+    container_name: config-server-app
+    image: config-server-image:latest
+    environment:
       - JAVA_OPTS=
         -Xms256M 
         -Xmx256M
@@ -46,22 +74,30 @@ services:
     depends_on:
       - registry-discovery
     ports:
-      - 8082:8082
+      - 8888:8888
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8888/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   customer:
-    container_name: bd-customer
+    container_name: customer-app
     image: customer-image:latest
     environment:
       - JAVA_OPTS=
          -Xms256M 
          -Xmx256M
          -DEUREKA_SERVER=http://registry-discovery:8761/eureka/
-
+      - CONFIG_SERVER=http://customer-config-server:8888
+      - SPRING_CLOUD_CONFIG_NAME=config-client
+      - SPRING_CLOUD_CONFIG_PROFILE=local
     depends_on:
       - registry-discovery
       - postgres_db
-    ports:
-      - 8081:8081
+      - customer-config-server
+    # ports:
+      # - 8081:8081
 
   postgres_db:
     container_name: postgres

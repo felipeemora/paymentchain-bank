@@ -45,16 +45,36 @@
                 "cwd": "${workspaceFolder}/infraestructuradomain/springadmin"
             },
             "problemMatcher": ["$maven"]
-        }
+        },
         {
-            "label": "Build All",
+            "label": "Build Config Server",
+            "type": "shell",
+			"command": "mvn package -DskipTests && ls -l target",
+            "options": {
+                "cwd": "${workspaceFolder}/infraestructuradomain/configserver"
+            },
+            "problemMatcher": ["$maven"]
+        },
+        {
+            "label": "Build API Gateway",
+            "type": "shell",
+			"command": "mvn package -DskipTests && ls -l target",
+            "options": {
+                "cwd": "${workspaceFolder}/infraestructuradomain/apigategay"
+            },
+            "problemMatcher": ["$maven"]
+        },
+        {
+            "label": "Microservices - Build All",
             "dependsOrder": "sequence",
             "dependsOn": [
                 "Build Customer",
                 "Build Products",
                 "Build Transactions",
                 "Build Eureka",
-                "Build Spring Admin"
+                "Build Spring Admin",
+                "Build Config Server",
+                "Build API Gateway"
             ],
             "problemMatcher": []
         },
@@ -104,14 +124,34 @@
             "problemMatcher": []
         },
         {
-            "label": "Docker Build All",
+            "label": "Docker Build Config Server",
+            "type": "shell",
+            "command": "docker build -t config-server-image --no-cache --build-arg JAR_FILE=target/*.jar .",
+            "options": {
+                "cwd": "${workspaceFolder}/infraestructuradomain/configserver"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker Build API Gateway",
+            "type": "shell",
+            "command": "docker build -t api-gateway-image --no-cache --build-arg JAR_FILE=target/*.jar .",
+            "options": {
+                "cwd": "${workspaceFolder}/infraestructuradomain/apigategay"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker - Build All",
             "dependsOrder": "sequence",
             "dependsOn": [
                 "Docker Build Customer",
                 "Docker Build Products",
                 "Docker Build Transactions",
                 "Docker Build Eureka",
-                "Docker Build Spring Admin"
+                "Docker Build Spring Admin",
+                "Docker Build Config Server",
+                "Docker Build API Gateway"
             ],
             "problemMatcher": []
         }

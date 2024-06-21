@@ -7,7 +7,7 @@
 ### 1. Compilar todos los microservicios y generar imágenes de docker
 Se puede entrar a cada proyecto y correr ```mvn package``` para vs code está el archivo ```tasks.json``` y con el comando ```ctrl + shift + p``` -> buscar la opción ```Run Task``` y correr las tareas en el siguien orden
 
-- *Build All* (Entra a cada folder y compila los proyectos para generar el .jar)
+- *Microservices - Build All* (Entra a cada folder y compila los proyectos para generar el .jar)
 - *Docker Build All* (Entra a cada folder y genera la imagen de docker)
 
 ### 2. Generar el contenedor de docker con todos los servicios
