@@ -17,6 +17,7 @@
         <module>eurekaserver</module>
         <module>springadmin</module>
         <module>apigategay</module>
+        <module>keycloack-adapter</module>
     </modules>
 
     <properties>

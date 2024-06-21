@@ -1,8 +1,10 @@
 # Maven mono repository to bank startup
 
-2. [Swagger Interface](http://localhost:8081/swagger-ui)
-2. [Access to h2 database](http://localhost:8081/h2-console/)
-2. [Access to pg admin](http://localhost:80)
+## Diagrama de Arquitectura
+
+## Flujo de autenticación - Keycloak
+
+![Auth Flow Keycloak](imgs/auth-flow-keycloak.png)
 
 ### 1. Compilar todos los microservicios y generar imágenes de docker
 Se puede entrar a cada proyecto y correr ```mvn package``` para vs code está el archivo ```tasks.json``` y con el comando ```ctrl + shift + p``` -> buscar la opción ```Run Task``` y correr las tareas en el siguien orden
@@ -20,6 +22,34 @@ En el folder principal está el archivo ```docker-compose.yml``` que se encarga 
 - App de ```spring-admin``` para administar las aplicaciones
 - Base de datos ```postgres```
 - Administrator de base de datos ```pgadmin```
+- App de autenticación ```Keycloack```
+
+### 3. Configuración del Keycloack
+1. Crear un Realm - Hace referencia a una organización para manejar permisos y roles, no es correcto usar el Realm master que viene por defecto
+![Key Cloack Step 1](imgs/keycloack-step1.png)
+
+
+2. Crear un rol llamdo partners
+![Key Cloack Step 2](imgs/keycloack-step2.png)
+
+3. Crear un usario llamado billing
+- Indicar Email, First Namey Last Name
+- En el apartado de Credentials crear una contraseña ```1234```
+![Key Cloack Step 3](imgs/keycloack-step3.png)
+- En los roles asociar el rol previamente creado
+![Key Cloack Step 4](imgs/keycloack-step4.png)
+
+4. En clientes crear uno nuevo con el nombre ``front-angular-billing-app`` va a ser el cliente que querrá hacer uso de nuestros microservicios
+![Key Cloack Step 5](imgs/keycloack-step5.png)
+
+5. Ya con eso puede generar el Access Token el cliente
+![Key Cloack Step 6](imgs/keycloack-step6.png)
+
+
+### 3. Endpoints generados // TODO
+2. [Swagger Interface](http://localhost:8081/swagger-ui)
+2. [Access to h2 database](http://localhost:8081/h2-console/)
+2. [Access to pg admin](http://localhost:80)
 
 ## Pruebas
 
